@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 
-	"github.com/vmware-tanzu/octant/pkg/plugin"
 	"github.com/vmware-tanzu/octant/pkg/plugin/service"
 
 	"github.com/bryanl/octant-operatorframework/pkg/oof"
@@ -12,15 +11,14 @@ import (
 var pluginName = "operator-framework"
 
 func main() {
-	capabilities := &plugin.Capabilities{
-		IsModule: true,
-	}
+	printer := oof.NewPrinter()
 
 	options := []service.PluginOption{
+		service.WithPrinter(printer.HandlePrint),
 		service.WithNavigation(oof.HandleNavigation, oof.InitRoutes),
 	}
 
-	p, err := service.Register(pluginName, "Operator Framework", capabilities, options...)
+	p, err := service.Register(pluginName, "Operator Framework", oof.InitCapabilities(), options...)
 	if err != nil {
 		log.Fatal(err)
 	}
