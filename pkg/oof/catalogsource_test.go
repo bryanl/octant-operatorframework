@@ -12,6 +12,7 @@ import (
 
 	"github.com/bryanl/octant-operatorframework/pkg/oof"
 	"github.com/bryanl/octant-operatorframework/pkg/oof/fake"
+	"github.com/bryanl/octant-operatorframework/thirdparty/operator-registry/pkg/api"
 )
 
 func TestCatalogSourcePrinter_PrintObject(t *testing.T) {
@@ -32,6 +33,14 @@ func TestCatalogSourcePrinter_PrintObject(t *testing.T) {
 
 	registryClient := fake.NewMockRegistryClient(controller)
 	registryClient.EXPECT().ListPackages(gomock.Any()).Return([]string{"package"}, nil)
+	registryClient.EXPECT().GetPackage(gomock.Any(), "package").Return(&api.Package{
+		Name: "package",
+		Channels: []*api.Channel{
+			{Name: "stable", CsvName: "csv-stable"},
+			{Name: "beta", CsvName: "csv-beta"},
+		},
+		DefaultChannelName: "stable",
+	}, nil)
 
 	pf := fake.NewMockPortForward(controller)
 	pf.EXPECT().ToService(gomock.Any(), "default", "test-source", uint16(50051)).Return(
@@ -76,7 +85,9 @@ func TestCatalogSourcePrinter_PrintObject(t *testing.T) {
 				Width: component.WidthFull,
 				View: component.NewTableWithRows("Packages", "", oof.CatalogSourcePackageCols, []component.TableRow{
 					{
-						"Name": component.NewText("package"),
+						"Name":            component.NewText("package"),
+						"Default Channel": component.NewText("stable"),
+						"Channels":        component.NewText("stable, beta"),
 					},
 				}),
 			},

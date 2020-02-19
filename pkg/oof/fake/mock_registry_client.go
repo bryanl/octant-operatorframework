@@ -6,6 +6,7 @@ package fake
 
 import (
 	context "context"
+	api "github.com/bryanl/octant-operatorframework/thirdparty/operator-registry/pkg/api"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 )
@@ -45,6 +46,21 @@ func (m *MockRegistryClient) Close() error {
 func (mr *MockRegistryClientMockRecorder) Close() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockRegistryClient)(nil).Close))
+}
+
+// GetPackage mocks base method
+func (m *MockRegistryClient) GetPackage(arg0 context.Context, arg1 string) (*api.Package, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPackage", arg0, arg1)
+	ret0, _ := ret[0].(*api.Package)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPackage indicates an expected call of GetPackage
+func (mr *MockRegistryClientMockRecorder) GetPackage(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPackage", reflect.TypeOf((*MockRegistryClient)(nil).GetPackage), arg0, arg1)
 }
 
 // ListPackages mocks base method

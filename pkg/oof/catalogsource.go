@@ -3,6 +3,7 @@ package oof
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/vmware-tanzu/octant/pkg/plugin"
 	"github.com/vmware-tanzu/octant/pkg/plugin/service"
@@ -79,7 +80,7 @@ func (c CatalogSourcePrinter) PrintObject(request PrintRequest) (plugin.PrintRes
 }
 
 var (
-	CatalogSourcePackageCols = component.NewTableCols("Name")
+	CatalogSourcePackageCols = component.NewTableCols("Name", "Default Channel", "Channels")
 )
 
 func (c *CatalogSourcePrinter) printPackages(request PrintRequest, m map[string]interface{}) (*component.Table, error) {
@@ -111,8 +112,20 @@ func (c *CatalogSourcePrinter) printPackages(request PrintRequest, m map[string]
 	}
 
 	for _, name := range packageNames {
+		pkg, err := registryClient.GetPackage(request.Context(), name)
+		if err != nil {
+			return nil, err
+		}
+
+		var channelNames []string
+		for _, channel := range pkg.Channels {
+			channelNames = append(channelNames, channel.Name)
+		}
+
 		row := component.TableRow{
-			"Name": component.NewText(name),
+			"Name":            component.NewText(name),
+			"Default Channel": component.NewText(pkg.DefaultChannelName),
+			"Channels":        component.NewText(strings.Join(channelNames, ", ")),
 		}
 		packageTable.Add(row)
 	}

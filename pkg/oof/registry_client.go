@@ -14,6 +14,7 @@ import (
 
 type RegistryClient interface {
 	ListPackages(ctx context.Context) ([]string, error)
+	GetPackage(ctx context.Context, name string) (*api.Package, error)
 	Close() error
 }
 
@@ -64,4 +65,10 @@ func (c *GRPCRegistryClient) ListPackages(ctx context.Context) ([]string, error)
 	}
 
 	return list, nil
+}
+
+func (c *GRPCRegistryClient) GetPackage(ctx context.Context, name string) (*api.Package, error) {
+	client := api.NewRegistryClient(c.conn)
+
+	return client.GetPackage(ctx, &api.GetPackageRequest{Name: name})
 }
