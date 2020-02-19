@@ -1,0 +1,162 @@
+{
+  "apiVersion": "v1",
+  "kind": "Pod",
+  "metadata": {
+    "creationTimestamp": "2020-02-17T16:51:50Z",
+    "generateName": "test-source-",
+    "labels": {
+      "olm.catalogSource": "test-source"
+    },
+    "name": "test-source-p89bv",
+    "namespace": "default",
+    "ownerReferences": [
+      {
+        "apiVersion": "operators.coreos.com/v1alpha1",
+        "blockOwnerDeletion": false,
+        "controller": false,
+        "kind": "CatalogSource",
+        "name": "test-source",
+        "uid": "ebc31972-3825-422b-9959-64d06de385a5"
+      }
+    ],
+    "resourceVersion": "992",
+    "selfLink": "/api/v1/namespaces/default/pods/test-source-p89bv",
+    "uid": "ff7be89c-3526-45f7-a4b2-66e37bab5b73"
+  },
+  "spec": {
+    "containers": [
+      {
+        "image": "bryanl/opm-test-index:0.3.0",
+        "imagePullPolicy": "IfNotPresent",
+        "livenessProbe": {
+          "exec": {
+            "command": [
+              "grpc_health_probe",
+              "-addr=localhost:50051"
+            ]
+          },
+          "failureThreshold": 3,
+          "initialDelaySeconds": 10,
+          "periodSeconds": 10,
+          "successThreshold": 1,
+          "timeoutSeconds": 1
+        },
+        "name": "registry-server",
+        "ports": [
+          {
+            "containerPort": 50051,
+            "name": "grpc",
+            "protocol": "TCP"
+          }
+        ],
+        "readinessProbe": {
+          "exec": {
+            "command": [
+              "grpc_health_probe",
+              "-addr=localhost:50051"
+            ]
+          },
+          "failureThreshold": 3,
+          "initialDelaySeconds": 5,
+          "periodSeconds": 10,
+          "successThreshold": 1,
+          "timeoutSeconds": 1
+        },
+        "resources": {
+          "requests": {
+            "cpu": "10m",
+            "memory": "50Mi"
+          }
+        },
+        "terminationMessagePath": "/dev/termination-log",
+        "terminationMessagePolicy": "File",
+        "volumeMounts": [
+          {
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+            "name": "default-token-sq948",
+            "readOnly": true
+          }
+        ]
+      }
+    ],
+    "dnsPolicy": "ClusterFirst",
+    "enableServiceLinks": true,
+    "nodeName": "work",
+    "priority": 0,
+    "restartPolicy": "Always",
+    "schedulerName": "default-scheduler",
+    "securityContext": {},
+    "serviceAccount": "default",
+    "serviceAccountName": "default",
+    "terminationGracePeriodSeconds": 30,
+    "tolerations": [
+      {
+        "operator": "Exists"
+      }
+    ],
+    "volumes": [
+      {
+        "name": "default-token-sq948",
+        "secret": {
+          "defaultMode": 420,
+          "secretName": "default-token-sq948"
+        }
+      }
+    ]
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastProbeTime": null,
+        "lastTransitionTime": "2020-02-17T16:51:50Z",
+        "status": "True",
+        "type": "Initialized"
+      },
+      {
+        "lastProbeTime": null,
+        "lastTransitionTime": "2020-02-17T16:52:07Z",
+        "status": "True",
+        "type": "Ready"
+      },
+      {
+        "lastProbeTime": null,
+        "lastTransitionTime": "2020-02-17T16:52:07Z",
+        "status": "True",
+        "type": "ContainersReady"
+      },
+      {
+        "lastProbeTime": null,
+        "lastTransitionTime": "2020-02-17T16:51:50Z",
+        "status": "True",
+        "type": "PodScheduled"
+      }
+    ],
+    "containerStatuses": [
+      {
+        "containerID": "docker://44e6d04427a6f8c098730eb457ba7d45affc51a9082c573a211cb794a190958f",
+        "image": "bryanl/opm-test-index:0.3.0",
+        "imageID": "docker-pullable://bryanl/opm-test-index@sha256:40f513cf468cce21b45cfb6d9be0cf8ae371fd1a2288368e9259f95cd4e50da7",
+        "lastState": {},
+        "name": "registry-server",
+        "ready": true,
+        "restartCount": 0,
+        "started": true,
+        "state": {
+          "running": {
+            "startedAt": "2020-02-17T16:51:53Z"
+          }
+        }
+      }
+    ],
+    "hostIP": "192.168.98.139",
+    "phase": "Running",
+    "podIP": "172.17.0.6",
+    "podIPs": [
+      {
+        "ip": "172.17.0.6"
+      }
+    ],
+    "qosClass": "Burstable",
+    "startTime": "2020-02-17T16:51:50Z"
+  }
+}

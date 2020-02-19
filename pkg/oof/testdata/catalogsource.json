@@ -1,0 +1,34 @@
+{
+  "apiVersion": "operators.coreos.com/v1alpha1",
+  "kind": "CatalogSource",
+  "metadata": {
+    "annotations": {
+      "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"operators.coreos.com/v1alpha1\",\"kind\":\"CatalogSource\",\"metadata\":{\"annotations\":{},\"name\":\"test-source\",\"namespace\":\"default\"},\"spec\":{\"image\":\"bryanl/opm-test-index:0.3.0\",\"sourceType\":\"grpc\"}}\n"
+    },
+    "creationTimestamp": "2020-02-17T16:51:50Z",
+    "generation": 1,
+    "name": "test-source",
+    "namespace": "default",
+    "resourceVersion": "3011",
+    "selfLink": "/apis/operators.coreos.com/v1alpha1/namespaces/default/catalogsources/test-source",
+    "uid": "ebc31972-3825-422b-9959-64d06de385a5"
+  },
+  "spec": {
+    "image": "bryanl/opm-test-index:0.3.0",
+    "sourceType": "grpc"
+  },
+  "status": {
+    "connectionState": {
+      "address": "test-source.default.svc:50051",
+      "lastConnect": "2020-02-17T17:06:01Z",
+      "lastObservedState": "READY"
+    },
+    "registryService": {
+      "createdAt": "2020-02-17T16:51:50Z",
+      "port": "50051",
+      "protocol": "grpc",
+      "serviceName": "test-source",
+      "serviceNamespace": "default"
+    }
+  }
+}

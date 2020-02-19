@@ -2,6 +2,7 @@
   <dictionary name="bryan">
     <words>
       <w>coreos</w>
+      <w>grpc</w>
       <w>killall</w>
     </words>
   </dictionary>

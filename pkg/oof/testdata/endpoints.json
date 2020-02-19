@@ -1,0 +1,39 @@
+{
+  "apiVersion": "v1",
+  "kind": "Endpoints",
+  "metadata": {
+    "annotations": {
+      "endpoints.kubernetes.io/last-change-trigger-time": "2020-02-17T16:52:07Z"
+    },
+    "creationTimestamp": "2020-02-17T16:51:50Z",
+    "name": "test-source",
+    "namespace": "default",
+    "resourceVersion": "993",
+    "selfLink": "/api/v1/namespaces/default/endpoints/test-source",
+    "uid": "888d458d-622c-4556-9c7c-20dc9ff7f0fd"
+  },
+  "subsets": [
+  {
+    "addresses": [
+    {
+      "ip": "172.17.0.6",
+      "nodeName": "work",
+      "targetRef": {
+        "kind": "Pod",
+        "name": "test-source-p89bv",
+        "namespace": "default",
+        "resourceVersion": "992",
+        "uid": "ff7be89c-3526-45f7-a4b2-66e37bab5b73"
+      }
+    }
+    ],
+    "ports": [
+    {
+      "name": "grpc",
+      "port": 50051,
+      "protocol": "TCP"
+    }
+    ]
+  }
+  ]
+}
