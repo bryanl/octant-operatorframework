@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/sirupsen/logrus"
 	"github.com/vmware-tanzu/octant/pkg/plugin/service"
@@ -44,6 +46,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	logrus.Info("serving")
-	p.Serve()
+	sigCh := make(chan os.Signal, 1)
+	done := make(chan bool, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+
+	go func() {
+		<-sigCh
+		done <- true
+	}()
+
+	go func() {
+		logrus.Info("serve plugin")
+		p.Serve()
+
+	}()
+
+	<-done
+	logrus.Info("plugin is exiting")
 }
