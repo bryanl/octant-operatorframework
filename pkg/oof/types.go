@@ -8,4 +8,9 @@ var (
 		Version: "v1alpha1",
 		Kind:    "CatalogSource",
 	}
+	SubscriptionGVK = schema.GroupVersionKind{
+		Group:   "operators.coreos.com",
+		Version: "v1alpha1",
+		Kind:    "Subscription",
+	}
 )

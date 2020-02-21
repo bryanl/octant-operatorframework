@@ -71,6 +71,8 @@ func (p *Printer) HandlePrint(request *service.PrintRequest) (plugin.PrintRespon
 	switch groupVersionKind {
 	case CatalogSourceGVK:
 		objectPrinter = NewCatalogSourcePrinter()
+	case SubscriptionGVK:
+		objectPrinter = NewSubscriptionPrinter()
 	default:
 		return emptyResponse, fmt.Errorf("unable to print object of type %s", groupVersionKind)
 	}
@@ -80,6 +82,7 @@ func (p *Printer) HandlePrint(request *service.PrintRequest) (plugin.PrintRespon
 	resp, err := objectPrinter.PrintObject(pr)
 	if err != nil {
 		logrus.WithError(err).Error("unable to print object")
+		return emptyResponse, fmt.Errorf("print object")
 	}
 
 	return resp, nil

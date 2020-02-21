@@ -9,6 +9,7 @@ func InitCapabilities() *plugin.Capabilities {
 	c := plugin.Capabilities{
 		SupportsPrinterConfig: []schema.GroupVersionKind{
 			CatalogSourceGVK,
+			SubscriptionGVK,
 		},
 		IsModule: true,
 	}
