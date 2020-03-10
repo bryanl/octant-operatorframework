@@ -50,15 +50,19 @@ type ObjectPrinter interface {
 	PrintObject(request PrintRequest) (plugin.PrintResponse, error)
 }
 
-type Printer struct{}
+type Printer struct {
+	logger logrus.FieldLogger
+}
 
-func NewPrinter() *Printer {
-	p := Printer{}
+func NewPrinter(logger logrus.FieldLogger) *Printer {
+	p := Printer{
+		logger: logger,
+	}
 
 	return &p
 }
 
-func (p *Printer) HandlePrint(request *service.PrintRequest) (plugin.PrintResponse, error) {
+func (p *Printer) Print(request *service.PrintRequest) (plugin.PrintResponse, error) {
 
 	if request.Object == nil {
 		return plugin.PrintResponse{}, fmt.Errorf("unable to print a nil object")
@@ -74,6 +78,7 @@ func (p *Printer) HandlePrint(request *service.PrintRequest) (plugin.PrintRespon
 	case SubscriptionGVK:
 		objectPrinter = NewSubscriptionPrinter()
 	default:
+		p.logger.Error("unable to print object of type %s", groupVersionKind)
 		return emptyResponse, fmt.Errorf("unable to print object of type %s", groupVersionKind)
 	}
 
@@ -81,7 +86,7 @@ func (p *Printer) HandlePrint(request *service.PrintRequest) (plugin.PrintRespon
 
 	resp, err := objectPrinter.PrintObject(pr)
 	if err != nil {
-		logrus.WithError(err).Error("unable to print object")
+		p.logger.WithError(err).Error("unable to print object")
 		return emptyResponse, fmt.Errorf("print object")
 	}
 

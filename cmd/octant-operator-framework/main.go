@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/vmware-tanzu/octant/pkg/plugin/service"
 
@@ -14,7 +15,7 @@ import (
 
 var pluginName = "operator-framework"
 
-func withLogger(fn func()) {
+func withLogger(fn func(logger logrus.FieldLogger)) {
 	filename := "/tmp/of.log"
 	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
@@ -25,13 +26,16 @@ func withLogger(fn func()) {
 		_ = f.Close()
 	}()
 
-	logrus.SetOutput(f)
+	logger := logrus.New()
+	logger.SetOutput(f)
 
-	fn()
+	entry := logger.WithField("instance", uuid.New().String())
+
+	fn(entry)
 }
 
 func main() {
-	withLogger(func() {
+	withLogger(func(logger logrus.FieldLogger) {
 		logrus.Info("plugin is starting")
 
 		defer func() {
@@ -40,14 +44,14 @@ func main() {
 			}
 		}()
 
-		printer := oof.NewPrinter()
+		printer := oof.NewPrinter(logger)
 
 		options := []service.PluginOption{
-			service.WithPrinter(printer.HandlePrint),
+			service.WithPrinter(printer.Print),
 			service.WithNavigation(oof.HandleNavigation, oof.InitRoutes),
 		}
 
-		logrus.Info("registering service")
+		logger.Info("registering service")
 		p, err := service.Register(pluginName, "Operator Framework", oof.InitCapabilities(), options...)
 		if err != nil {
 			log.Fatal(err)
@@ -59,19 +63,18 @@ func main() {
 
 		go func() {
 			sig := <-sigCh
-			logrus.WithField("signal", sigToString(sig)).Info("detected signal; preparing to exit")
+			logger.WithField("signal", sigToString(sig)).Info("detected signal; preparing to exit")
 			done <- true
 		}()
 
 		go func() {
-			logrus.Info("plugin is serving requests")
+			logger.Info("plugin is serving requests")
 			p.Serve()
 
 		}()
 
 		<-done
-		logrus.Info("plugin is exiting")
-
+		logger.Info("plugin is exiting")
 	})
 }
 

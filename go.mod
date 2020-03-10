@@ -5,6 +5,7 @@ go 1.13
 require (
 	github.com/golang/mock v1.3.1
 	github.com/golang/protobuf v1.3.2
+	github.com/google/uuid v1.1.1
 	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200213132121-99643127d862
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.4.0
