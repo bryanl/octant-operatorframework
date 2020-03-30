@@ -49,6 +49,7 @@ func main() {
 		options := []service.PluginOption{
 			service.WithPrinter(printer.Print),
 			service.WithNavigation(oof.HandleNavigation, oof.InitRoutes),
+			service.WithActionHandler(oof.HandleActions),
 		}
 
 		logger.Info("registering service")

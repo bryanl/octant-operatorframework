@@ -14,3 +14,7 @@ var (
 		Kind:    "Subscription",
 	}
 )
+
+const (
+	ActionSubscribeToPackage = "oof.bryanl.dev/subscribe-to-package"
+)

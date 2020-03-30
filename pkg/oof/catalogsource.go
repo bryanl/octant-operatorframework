@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/vmware-tanzu/octant/pkg/action"
 	"github.com/vmware-tanzu/octant/pkg/plugin"
 	"github.com/vmware-tanzu/octant/pkg/plugin/service"
 	"github.com/vmware-tanzu/octant/pkg/view/component"
@@ -67,7 +68,7 @@ func (c CatalogSourcePrinter) PrintObject(request PrintRequest) (plugin.PrintRes
 		return emptyResponse, err
 	}
 
-	packageTable, err := c.printPackages(request, object.Object)
+	packageTable, err := c.printPackages(request, object)
 	if err != nil {
 		return emptyResponse, err
 	}
@@ -84,7 +85,9 @@ var (
 	CatalogSourcePackageCols = component.NewTableCols("Name", "Default Channel", "Channels")
 )
 
-func (c *CatalogSourcePrinter) printPackages(request PrintRequest, m map[string]interface{}) (*component.Table, error) {
+func (c *CatalogSourcePrinter) printPackages(request PrintRequest, u *unstructured.Unstructured) (*component.Table, error) {
+	m := u.Object
+
 	sp, err := c.catalogServicePort(m)
 	if err != nil {
 		return nil, fmt.Errorf("get catalog registry address: %w", err)
@@ -123,10 +126,21 @@ func (c *CatalogSourcePrinter) printPackages(request PrintRequest, m map[string]
 			channelNames = append(channelNames, channel.Name)
 		}
 
+		gridActions := component.NewGridActions()
+		gridActions.AddAction("Subscribe", ActionSubscribeToPackage, action.Payload{
+			"namespace":         u.GetNamespace(),
+			"catalogSourceName": u.GetName(),
+			"packageName":       name,
+		})
+
+		nameComponent := component.NewText(name)
+		nameComponent.SetStatus(component.TextStatusError)
+
 		row := component.TableRow{
-			"Name":            component.NewText(name),
+			"Name":            nameComponent,
 			"Default Channel": component.NewText(pkg.DefaultChannelName),
 			"Channels":        component.NewText(strings.Join(channelNames, ", ")),
+			"_action":         gridActions,
 		}
 		packageTable.Add(row)
 	}

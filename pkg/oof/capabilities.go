@@ -12,6 +12,9 @@ func InitCapabilities() *plugin.Capabilities {
 			SubscriptionGVK,
 		},
 		IsModule: true,
+		ActionNames: []string{
+			ActionSubscribeToPackage,
+		},
 	}
 
 	return &c

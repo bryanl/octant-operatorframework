@@ -11,7 +11,7 @@ require (
 	github.com/stretchr/testify v1.4.0
 	github.com/vmware-tanzu/octant v0.9.2-0.20191221004819-6a2b14b497a1
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
-	google.golang.org/grpc v1.24.0
+	google.golang.org/grpc v1.27.0
 	k8s.io/api v0.17.1
 	k8s.io/apimachinery v0.17.1
 )
